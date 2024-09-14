@@ -1,0 +1,7 @@
+---
+- name: Ping al servidor SGO
+  hosts: servidor-sgo
+  gather_facts: false
+  tasks:
+    - name: Ejecutar ping
+      ansible.builtin.ping:
