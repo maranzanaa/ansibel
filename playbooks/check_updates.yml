@@ -1,0 +1,12 @@
+---
+- name: Verificar actualizaciones disponibles
+  hosts: servidores
+  tasks:
+    - name: Ejecutar el comando para listar actualizaciones disponibles
+      command: apt list --upgradable
+      register: apt_update_output
+      become: yes
+
+    - name: Mostrar el resultado de las actualizaciones disponibles
+      debug:
+        msg: "{{ apt_update_output.stdout }}"
