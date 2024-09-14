@@ -1,0 +1,35 @@
+---
+- name: Import MySQL database
+  hosts: localhost
+  vars:
+    mysql_user: "root"
+    mysql_password: "Cruc1jueg0ssAdm1n."
+    mysql_database: "crm_v3"
+    dir_file: "/home/crucijuegos/looker/"
+    log_file: "/var/log/importacion_sql.txt"
+    fecha: "{{ ansible_date_time.date | regex_replace('-', '') }}"
+
+  tasks:
+    - name: Set SQL file name
+      set_fact:
+        sql_file: "{{ dir_file }}base_looker-{{ fecha }}.sql"
+
+    - name: Log start of import
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "Inicio de la importación: {{ ansible_date_time.iso8601 }}"
+        create: yes
+
+    - name: Import SQL file to database
+      community.mysql.mysql_db:
+        login_user: "{{ mysql_user }}"
+        login_password: "{{ mysql_password }}"
+        name: "{{ mysql_database }}"
+        state: import
+        target: "{{ sql_file }}"
+      register: import_result
+
+    - name: Log import result
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "{{ 'Importación completada exitosamente: ' if import_result.changed else 'Error durante la importación: ' }}{{ ansible_date_time.iso8601 }}"
