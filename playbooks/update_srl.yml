@@ -1,10 +1,14 @@
 ---
-- name: Actualizar Mini-PC SRL
+- name: Actualizar minipc-srl
   hosts: minipc-srl
-  become: yes
+  become: yes  # Para usar privilegios de administrador (equivalente a sudo)
   tasks:
-    - name: Actualizar caché de apt y realizar upgrade
+    - name: Actualizar la lista de paquetes
       apt:
-        upgrade: yes
         update_cache: yes
-        cache_valid_time: 86400
+
+    - name: Actualizar paquetes instalados
+      apt:
+        upgrade: dist  # También puedes usar 'full' si deseas hacer un upgrade completo
+        autoremove: yes
+        autoclean: yes
