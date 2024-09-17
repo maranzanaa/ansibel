@@ -1,5 +1,5 @@
 ---
-- name: Actualizar servidores
+- name: Actualizar Mini-PC SRL
   hosts: minipc-srl
   become: yes
   tasks:
