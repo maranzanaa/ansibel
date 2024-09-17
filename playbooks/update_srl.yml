@@ -1,7 +1,7 @@
 ---
 - name: Actualizar minipc-srl
   hosts: minipc-srl
-  become: yes  # Para usar privilegios de administrador (equivalente a sudo)
+  become: yes 
   tasks:
     - name: Actualizar la lista de paquetes
       apt:
@@ -9,6 +9,6 @@
 
     - name: Actualizar paquetes instalados
       apt:
-        upgrade: dist  # También puedes usar 'full' si deseas hacer un upgrade completo
+        upgrade: full
         autoremove: yes
         autoclean: yes
