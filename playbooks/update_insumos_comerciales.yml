@@ -1,6 +1,6 @@
 ---
-- name: Actualizar minipc-insumos-planta-baja
-  hosts: insumos-planta-baja
+- name: Actualizar minipc-insumos-comerciales
+  hosts: insumos-comerciales
   become: yes 
   tasks:
     - name: Actualizar la lista de paquetes
