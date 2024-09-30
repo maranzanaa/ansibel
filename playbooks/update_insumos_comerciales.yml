@@ -3,12 +3,48 @@
   hosts: insumos-comerciales
   become: yes 
   tasks:
-    - name: Actualizar la lista de paquetes
+      - name: Actualizar la lista de paquetes
       apt:
         update_cache: yes
 
-    - name: Actualizar paquetes instalados
-      apt:
-        upgrade: full
-        autoremove: yes
-        autoclean: yes
+      - name: Actualizar paquetes instalados- name: Check if dpkg is locked
+        shell: lsof /var/lib/dpkg/lock-frontend
+        register: dpkg_lock
+        ignore_errors: yes
+        changed_when: false
+
+      - name: Wait for dpkg lock to be released
+      wait_for:
+        path: "/var/lib/dpkg/lock-frontend"
+      state: absent
+         when: dpkg_lock.rc == 0
+
+      - name: Kill any stuck apt processes
+      shell: "kill -9 $(lsof -t /var/lib/dpkg/lock-frontend) || true"
+        when: dpkg_lock.rc == 0
+
+      - name: Remove dpkg lock files
+      file:
+      path: "{{ item }}"
+      state: absent
+      loop:
+        - /var/lib/apt/lists/lock
+        - /var/cache/apt/archives/lock
+        - /var/lib/dpkg/lock
+        - /var/lib/dpkg/lock-frontend
+        when: dpkg_lock.rc == 0
+
+     - name: Reconfigure dpkg
+     command: dpkg --configure -a
+       when: dpkg_lock.rc == 0
+
+     - name: Update and upgrade apt packages
+       apt:
+     upgrade: dist
+     update_cache: yes
+     autoremove: yes
+     register: apt_result
+       apt:
+     upgrade: full
+     autoremove: yes
+     autoclean: yes
