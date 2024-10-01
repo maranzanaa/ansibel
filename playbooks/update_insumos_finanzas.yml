@@ -1,6 +1,6 @@
 ---
 - name: Actualizar minipc-insumos-finanzas
-  hosts: insumos-comerciales
+  hosts: insumos-finanzas
   become: yes 
   tasks:
     - name: Actualizar la lista de paquetes
