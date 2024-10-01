@@ -1,0 +1,14 @@
+---
+- name: Actualizar minipc-insumos-area-tecnica
+  hosts: insumos-area-tecnica
+  become: yes 
+  tasks:
+    - name: Actualizar la lista de paquetes
+      apt:
+        update_cache: yes
+
+    - name: Actualizar paquetes instalados
+      apt:
+        upgrade: full
+        autoremove: yes
+        autoclean: yes
