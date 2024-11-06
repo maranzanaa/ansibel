@@ -1,6 +1,6 @@
 ---
 - name: Actualizar minipc-insumos-diseño
-  hosts: insumos-diseño
+  hosts: insumos-disenio
   become: yes 
   tasks:
     - name: Actualizar la lista de paquetes
